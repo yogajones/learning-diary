@@ -4,8 +4,12 @@ import messages, users
 
 @app.route("/")
 def index():
-    list = messages.get_list()
-    return render_template("index.html", count=len(list), messages=list)
+    user_id = users.user_id()
+    if user_id == 0:
+            return render_template("index.html", count=0, messages=[])
+    else:
+        list = messages.get_list(user_id)
+        return render_template("index.html", count=len(list), messages=list)
 
 @app.route("/new")
 def new():

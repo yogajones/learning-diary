@@ -7,3 +7,8 @@ def create_learning_journey(title, user_id):
     db.session.commit()
     journey_id = result.fetchone()[0]
     return journey_id
+
+def get_learning_journeys(user_id):
+    sql = "SELECT id, title FROM learning_journeys WHERE user_id=:user_id"
+    result = db.session.execute(text(sql), {"user_id": user_id})
+    return result.fetchall()

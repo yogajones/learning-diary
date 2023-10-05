@@ -13,7 +13,9 @@ def index():
 
 @app.route("/new")
 def new():
-    return render_template("new.html")
+    user_id = users.user_id()
+    learning_journeys = journeys.get_learning_journeys(user_id)
+    return render_template("new.html", learning_journeys=learning_journeys)
 
 @app.route("/send", methods=["POST"])
 def send():

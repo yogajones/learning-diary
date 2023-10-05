@@ -3,7 +3,7 @@ from sqlalchemy import text
 import users
 
 def get_list(user_id):
-    sql = "SELECT M.content, U.username, M.sent_at FROM messages M, users U WHERE M.user_id=U.id AND M.user_id=:user_id ORDER BY M.id DESC"
+    sql = "SELECT M.content, U.username, M.sent_at, LJ.title FROM messages M JOIN users U ON M.user_id = U.id LEFT JOIN learning_journeys LJ ON M.learning_journey_id = LJ.id WHERE M.user_id = :user_id ORDER BY M.sent_at DESC"
     result = db.session.execute(text(sql), {"user_id": user_id})
     return result.fetchall()
 

@@ -4,6 +4,8 @@ Total entries: {{ count }}
 <i>Entry:</i> {{ message[0] }}
 {% if message[3] %}
 <p><i>Learning Journey:</i> {{ message[3] }}</p>
+{% else %}
+<br><br>
 {% endif %}
 <i>Time:</i> {{ message[2].strftime("%Y-%m-%d %H:%M:%S") }}
 <hr>

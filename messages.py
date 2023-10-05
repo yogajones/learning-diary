@@ -11,6 +11,8 @@ def send(content, user_id, learning_journey_id=None):
     user_id = users.user_id()
     if user_id == 0:
         return False
+    if not learning_journey_id:
+        learning_journey_id = None
     sql = "INSERT INTO messages (content, user_id, learning_journey_id, sent_at) VALUES (:content, :user_id, :learning_journey_id, NOW())"
     db.session.execute(text(sql), {"content": content, "user_id": user_id, "learning_journey_id": learning_journey_id})
     db.session.commit()

@@ -1,6 +1,6 @@
 from app import app
 from flask import render_template, request, redirect
-import messages, users
+import messages, users, journeys
 
 @app.route("/")
 def index():
@@ -18,10 +18,16 @@ def new():
 @app.route("/send", methods=["POST"])
 def send():
     content = request.form["content"]
-    if messages.send(content):
+    user_id = users.user_id()
+    learning_journey_id = request.form.get("learning_journey_id")
+    new_journey_title = request.form.get("new_journey_title")
+    if new_journey_title:
+        learning_journey_id = journeys.create_learning_journey(new_journey_title, user_id)
+    if messages.send(content, user_id, learning_journey_id):
         return redirect("/")
     else:
         return render_template("error.html", message="Viestin lähetys ei onnistunut")
+
     
 @app.route("/login", methods=["GET", "POST"])
 def login():

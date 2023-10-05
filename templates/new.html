@@ -2,5 +2,12 @@
 Entry: <br>
 <textarea name="content" rows="3" cols="40"></textarea>
 <br>
+<select name="learning_journey_id">
+<option value="">Select a learning journey</option>
+{% for journey in learning_journeys %}
+<option value="{{ journey.id }}">{{ journey.title }}</option>
+{% endfor %}
+</select>
+<input type="text" name="new_journey_title" placeholder="Create a new journey">
 <input type="submit" value="Send">
 </form>

@@ -7,11 +7,11 @@ def get_list(user_id):
     result = db.session.execute(text(sql), {"user_id": user_id})
     return result.fetchall()
 
-def send(content):
+def send(content, user_id, learning_journey_id=None):
     user_id = users.user_id()
     if user_id == 0:
         return False
-    sql = "INSERT INTO messages (content, user_id, sent_at) VALUES (:content, :user_id, NOW())"
-    db.session.execute(text(sql), {"content":content, "user_id":user_id})
+    sql = "INSERT INTO messages (content, user_id, learning_journey_id, sent_at) VALUES (:content, :user_id, :learning_journey_id, NOW())"
+    db.session.execute(text(sql), {"content": content, "user_id": user_id, "learning_journey_id": learning_journey_id})
     db.session.commit()
     return True

@@ -3,7 +3,7 @@ from sqlalchemy import text
 import users
 
 def get_list(user_id):
-    sql = "SELECT M.content, U.username, M.sent_at, LJ.title FROM messages M JOIN users U ON M.user_id = U.id LEFT JOIN learning_journeys LJ ON M.learning_journey_id = LJ.id WHERE M.user_id = :user_id ORDER BY M.sent_at DESC"
+    sql = "SELECT M.content, U.username, M.sent_at, LJ.title, M.id FROM messages M JOIN users U ON M.user_id = U.id LEFT JOIN learning_journeys LJ ON M.learning_journey_id = LJ.id WHERE M.user_id = :user_id ORDER BY M.sent_at DESC"
     result = db.session.execute(text(sql), {"user_id": user_id})
     return result.fetchall()
 
@@ -17,3 +17,14 @@ def send(content, user_id, learning_journey_id=None):
     db.session.execute(text(sql), {"content": content, "user_id": user_id, "learning_journey_id": learning_journey_id})
     db.session.commit()
     return True
+
+def get_entry_by_id(entry_id):
+    sql = "SELECT * FROM messages M WHERE id=:entry_id"
+    result = db.session.execute(text(sql), {"entry_id": entry_id})
+    entry = result.fetchone()
+    return entry
+
+def update_entry_content(entry_id, new_content):
+    sql = "UPDATE messages SET content=:new_content WHERE id=:entry_id"
+    db.session.execute(text(sql), {"new_content": new_content, "entry_id": entry_id})
+    db.session.commit()

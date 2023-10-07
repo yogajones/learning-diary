@@ -8,6 +8,9 @@ Total entries: {{ count }}
 <br><br>
 {% endif %}
 <i>Time:</i> {{ message[2].strftime("%Y-%m-%d %H:%M:%S") }}
+{% if session.user_id %}
+<a href="/edit_entry/{{ message[4] }}">Edit</a>
+{% endif %}
 <hr>
 {% endfor %}
 {% if session.user_id %}

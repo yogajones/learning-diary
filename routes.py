@@ -17,6 +17,26 @@ def new():
     learning_journeys = journeys.get_learning_journeys(user_id)
     return render_template("new.html", learning_journeys=learning_journeys)
 
+@app.route("/edit_entry/<int:entry_id>", methods=["GET", "POST"])
+def edit_entry(entry_id):
+    user_id = users.user_id()
+    if user_id == 0:
+        return redirect("/login")
+
+    entry = messages.get_entry_by_id(entry_id)
+
+    if not entry:
+        return render_template("error.html", message="Entry not found")
+    if entry.user_id != user_id:
+        return render_template("error.html", message="Unauthorized access")
+
+    if request.method == "POST":
+        new_content = request.form["content"]
+        messages.update_entry_content(entry_id, new_content)
+        return redirect("/")
+
+    return render_template("edit_entry.html", entry_id=entry_id, entry_content=entry.content)
+
 @app.route("/send", methods=["POST"])
 def send():
     content = request.form["content"]

@@ -28,3 +28,8 @@ def update_entry_content(entry_id, new_content):
     sql = "UPDATE messages SET content=:new_content WHERE id=:entry_id"
     db.session.execute(text(sql), {"new_content": new_content, "entry_id": entry_id})
     db.session.commit()
+
+def update_entry_learning_journey(entry_id, new_learning_journey_id):
+    sql = "UPDATE messages SET learning_journey_id=:new_learning_journey_id WHERE id=:entry_id"
+    db.session.execute(text(sql), {"new_learning_journey_id": new_learning_journey_id, "entry_id": entry_id})
+    db.session.commit()

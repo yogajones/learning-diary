@@ -3,6 +3,23 @@
 <label for="content">Edit entry:</label><br>
 <textarea name="content" rows="3" cols="40">{{ entry_content }}</textarea>
 <br>
+
+<label for="learning_journey_id">Select a learning journey:</label>
+<br>
+<select name="learning_journey_id">
+<option value="">No learning journey</option>
+{% for journey in learning_journeys %}
+<option value="{{ journey.id }}" {% if journey.id == entry.learning_journey_id %}selected{% endif %}>
+{{ journey.title }}
+</option>
+{% endfor %}
+</select>
+<br>
+
+<label for="new_journey_title">Create a new learning journey:</label>
+<input type="text" name="new_journey_title">
+<br>
+
 <input type="submit" value="Save changes">
 </form>
 <a href="/">Cancel</a>

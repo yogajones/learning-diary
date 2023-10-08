@@ -30,12 +30,26 @@ def edit_entry(entry_id):
     if entry.user_id != user_id:
         return render_template("error.html", message="Unauthorized access")
 
+    current_learning_journey = journeys.get_learning_journey_by_id(entry.learning_journey_id)
+
     if request.method == "POST":
         new_content = request.form["content"]
+        new_learning_journey_id = request.form.get("learning_journey_id")
+        new_journey_title = request.form.get("new_journey_title")
+        
+        if new_learning_journey_id == "":
+            new_learning_journey_id = None
+
+        if new_journey_title:
+            new_learning_journey_id = journeys.create_learning_journey(new_journey_title, user_id)
+
         messages.update_entry_content(entry_id, new_content)
+        messages.update_entry_learning_journey(entry_id, new_learning_journey_id)
+
         return redirect("/")
 
-    return render_template("edit_entry.html", entry_id=entry_id, entry_content=entry.content)
+    learning_journeys = journeys.get_learning_journeys(user_id)
+    return render_template("edit_entry.html", entry=entry, entry_id=entry_id, entry_content=entry.content, learning_journeys=learning_journeys, entry_learning_journey=current_learning_journey)
 
 @app.route("/send", methods=["POST"])
 def send():

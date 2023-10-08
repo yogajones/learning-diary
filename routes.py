@@ -64,6 +64,37 @@ def send():
     else:
         return render_template("error.html", message="Viestin lähetys ei onnistunut")
 
+@app.route("/delete_entry/<int:entry_id>")
+def delete_entry(entry_id):
+    user_id = users.user_id()
+    if user_id == 0:
+        return redirect("/login")
+
+    entry = messages.get_entry_by_id(entry_id)
+
+    if not entry:
+        return render_template("error.html", message="Entry not found")
+    if entry.user_id != user_id:
+        return render_template("error.html", message="Unauthorized access")
+
+    return render_template("delete_entry.html", entry=entry, entry_id=entry_id)
+
+@app.route("/confirm_delete/<int:entry_id>")
+def confirm_delete(entry_id):
+    user_id = users.user_id()
+    if user_id == 0:
+        return redirect("/login")
+
+    entry = messages.get_entry_by_id(entry_id)
+
+    if not entry:
+        return render_template("error.html", message="Entry not found")
+    if entry.user_id != user_id:
+        return render_template("error.html", message="Unauthorized access")
+
+    messages.delete_entry(entry_id)
+
+    return redirect("/")
     
 @app.route("/login", methods=["GET", "POST"])
 def login():

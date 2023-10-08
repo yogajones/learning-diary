@@ -33,3 +33,8 @@ def update_entry_learning_journey(entry_id, new_learning_journey_id):
     sql = "UPDATE messages SET learning_journey_id=:new_learning_journey_id WHERE id=:entry_id"
     db.session.execute(text(sql), {"new_learning_journey_id": new_learning_journey_id, "entry_id": entry_id})
     db.session.commit()
+
+def delete_entry(entry_id):
+    sql = "DELETE FROM messages WHERE id=:entry_id"
+    db.session.execute(text(sql), {"entry_id": entry_id})
+    db.session.commit()

@@ -1,0 +1,5 @@
+<p>Are you sure you want to delete the following entry?</p>
+<p><a href="/confirm_delete/{{ entry_id }}">Yes</a> | <a href="/">Cancel</a></p>
+<p><strong>Entry:</strong> {{ entry.content }}</p>
+<p><strong>Learning Journey:</strong> {{ entry.title }}</p>
+<p><strong>Time:</strong> {{ entry.sent_at.strftime("%Y-%m-%d %H:%M:%S") }}</p>

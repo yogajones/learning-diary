@@ -1,6 +1,6 @@
 from app import app
 from flask import render_template, request, redirect
-import messages, users, journeys
+import entries, users, journeys
 
 @app.route("/")
 def index():
@@ -8,7 +8,7 @@ def index():
     if user_id == 0:
             return render_template("index.html", count=0, messages=[])
     else:
-        list = messages.get_list(user_id)
+        list = entries.get_list(user_id)
         return render_template("index.html", count=len(list), messages=list)
 
 @app.route("/new")
@@ -23,7 +23,7 @@ def edit_entry(entry_id):
     if user_id == 0:
         return redirect("/login")
 
-    entry = messages.get_entry_by_id(entry_id)
+    entry = entries.get_entry_by_id(entry_id)
 
     if not entry:
         return render_template("error.html", message="Entry not found")
@@ -43,8 +43,8 @@ def edit_entry(entry_id):
         if new_journey_title:
             new_learning_journey_id = journeys.create_learning_journey(new_journey_title, user_id)
 
-        messages.update_entry_content(entry_id, new_content)
-        messages.update_entry_learning_journey(entry_id, new_learning_journey_id)
+        entries.update_entry_content(entry_id, new_content)
+        entries.update_entry_learning_journey(entry_id, new_learning_journey_id)
 
         return redirect("/")
 
@@ -59,7 +59,7 @@ def send():
     new_journey_title = request.form.get("new_journey_title")
     if new_journey_title:
         learning_journey_id = journeys.create_learning_journey(new_journey_title, user_id)
-    if messages.send(content, user_id, learning_journey_id):
+    if entries.send(content, user_id, learning_journey_id):
         return redirect("/")
     else:
         return render_template("error.html", message="Viestin lähetys ei onnistunut")
@@ -70,7 +70,7 @@ def delete_entry(entry_id):
     if user_id == 0:
         return redirect("/login")
 
-    entry = messages.get_entry_by_id(entry_id)
+    entry = entries.get_entry_by_id(entry_id)
 
     if not entry:
         return render_template("error.html", message="Entry not found")
@@ -85,14 +85,14 @@ def confirm_delete(entry_id):
     if user_id == 0:
         return redirect("/login")
 
-    entry = messages.get_entry_by_id(entry_id)
+    entry = entries.get_entry_by_id(entry_id)
 
     if not entry:
         return render_template("error.html", message="Entry not found")
     if entry.user_id != user_id:
         return render_template("error.html", message="Unauthorized access")
 
-    messages.delete_entry(entry_id)
+    entries.delete_entry(entry_id)
 
     return redirect("/")
     

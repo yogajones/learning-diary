@@ -8,7 +8,7 @@ CREATE TABLE learning_journeys (
     title TEXT,
     user_id INTEGER REFERENCES users
 );
-CREATE TABLE messages (
+CREATE TABLE entries (
     id SERIAL PRIMARY KEY,
     content TEXT,
     user_id INTEGER REFERENCES users,

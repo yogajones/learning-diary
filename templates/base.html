@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+{% with errors = get_flashed_messages() %}
+{% if errors %}
+<div class="error">
+{% for error in errors %}
+<p>Error: {{ error }}</p>
+{% endfor %}
+</div>
+{% endif %}
+{% endwith %}
+{% block content %}{% endblock %}
+</body>
+</html>

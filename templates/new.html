@@ -1,3 +1,5 @@
+{% extends "base.html" %}
+{% block content %}
 <form action="/send" method="post">
 Entry: <br>
 <textarea name="content" rows="3" cols="40"></textarea>
@@ -11,3 +13,4 @@ Entry: <br>
 <input type="text" name="new_journey_title" placeholder="Create a new journey">
 <input type="submit" value="Send">
 </form>
+{% endblock %}

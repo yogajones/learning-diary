@@ -1,5 +1,5 @@
 from app import app
-from flask import render_template, request, redirect
+from flask import render_template, request, redirect, flash
 import entries, users, journeys
 
 @app.route("/")
@@ -26,9 +26,11 @@ def edit_entry(entry_id):
     entry = entries.get_entry_by_id(entry_id)
 
     if not entry:
-        return render_template("error.html", message="Entry not found")
+        flash("Entry not found")
+        return redirect("/")
     if entry.user_id != user_id:
-        return render_template("error.html", message="Unauthorized access")
+        flash("Unauthorized access")
+        return redirect("/")
 
     current_learning_journey = journeys.get_learning_journey_by_id(entry.learning_journey_id)
 
@@ -62,20 +64,24 @@ def send():
     if entries.send(content, user_id, learning_journey_id):
         return redirect("/")
     else:
-        return render_template("error.html", message="Viestin lähetys ei onnistunut")
+        flash("Failed to submit entry")
+        return redirect("/send")
 
 @app.route("/delete_entry/<int:entry_id>")
 def delete_entry(entry_id):
     user_id = users.user_id()
     if user_id == 0:
+        flash("Unauthorized access")
         return redirect("/login")
 
     entry = entries.get_entry_by_id(entry_id)
 
     if not entry:
-        return render_template("error.html", message="Entry not found")
+        flash("Entry not found")
+        return redirect("/")
     if entry.user_id != user_id:
-        return render_template("error.html", message="Unauthorized access")
+        flash("Unauthorized access")
+        return redirect("/")
 
     return render_template("delete_entry.html", entry=entry, entry_id=entry_id)
 
@@ -88,12 +94,13 @@ def confirm_delete(entry_id):
     entry = entries.get_entry_by_id(entry_id)
 
     if not entry:
-        return render_template("error.html", message="Entry not found")
+        flash("Entry not found")
+        return redirect("/")
     if entry.user_id != user_id:
-        return render_template("error.html", message="Unauthorized access")
+        flash("Unauthorized access")
+        return redirect("/")
 
     entries.delete_entry(entry_id)
-
     return redirect("/")
     
 @app.route("/login", methods=["GET", "POST"])
@@ -106,7 +113,8 @@ def login():
         if users.login(username, password):
             return redirect("/")
         else:
-            return render_template("error.html", message="Väärä tunnus tai salasana")
+            flash("Incorrect username or password")
+            return render_template("login.html")
 
 @app.route("/logout")
 def logout():
@@ -122,8 +130,10 @@ def register():
         password1 = request.form["password1"]
         password2 = request.form["password2"]
         if password1 != password2:
-            return render_template("error.html", message="Salasanat eroavat")
+            flash("Passwords don't match")
+            return render_template("register.html")
         if users.register(username, password1):
             return redirect("/")
         else:
-            return render_template("error.html", message="Rekisteröinti ei onnistunut")
+            flash("Unknown error: Failed to create account")
+            return render_template("register.html")

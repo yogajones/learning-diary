@@ -1,7 +1,7 @@
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
-    username TEXT UNIQUE,
-    password TEXT
+    username TEXT UNIQUE NOT NULL,
+    password TEXT NOT NULL
 );
 CREATE TABLE learning_journeys (
     id SERIAL PRIMARY KEY,

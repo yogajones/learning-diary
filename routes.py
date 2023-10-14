@@ -6,7 +6,7 @@ import entries, users, journeys
 def index():
     user_id = users.user_id()
     if user_id == 0:
-            return render_template("index.html", count=0, messages=[])
+            return redirect("/login")
     else:
         list = entries.get_list(user_id)
         return render_template("index.html", count=len(list), messages=list)
@@ -26,10 +26,10 @@ def edit_entry(entry_id):
     entry = entries.get_entry_by_id(entry_id)
 
     if not entry:
-        flash("Entry not found")
+        flash("Entry not found", "Error")
         return redirect("/")
     if entry.user_id != user_id:
-        flash("Unauthorized access")
+        flash("Unauthorized access", "Error")
         return redirect("/")
 
     current_learning_journey = journeys.get_learning_journey_by_id(entry.learning_journey_id)
@@ -64,23 +64,23 @@ def send():
     if entries.send(content, user_id, learning_journey_id):
         return redirect("/")
     else:
-        flash("Failed to submit entry")
+        flash("Failed to submit entry", "Error")
         return redirect("/send")
 
 @app.route("/delete_entry/<int:entry_id>")
 def delete_entry(entry_id):
     user_id = users.user_id()
     if user_id == 0:
-        flash("Unauthorized access")
+        flash("Unauthorized access", "Error")
         return redirect("/login")
 
     entry = entries.get_entry_by_id(entry_id)
 
     if not entry:
-        flash("Entry not found")
+        flash("Entry not found", "Error")
         return redirect("/")
     if entry.user_id != user_id:
-        flash("Unauthorized access")
+        flash("Unauthorized access", "Error")
         return redirect("/")
 
     return render_template("delete_entry.html", entry=entry, entry_id=entry_id)
@@ -94,10 +94,10 @@ def confirm_delete(entry_id):
     entry = entries.get_entry_by_id(entry_id)
 
     if not entry:
-        flash("Entry not found")
+        flash("Entry not found", "Error")
         return redirect("/")
     if entry.user_id != user_id:
-        flash("Unauthorized access")
+        flash("Unauthorized access", "Error")
         return redirect("/")
 
     entries.delete_entry(entry_id)
@@ -113,7 +113,7 @@ def login():
         if users.login(username, password):
             return redirect("/")
         else:
-            flash("Incorrect username or password")
+            flash("Incorrect username or password", "Error")
             return render_template("login.html")
 
 @app.route("/logout")
@@ -129,11 +129,12 @@ def register():
         username = request.form["username"]
         password1 = request.form["password1"]
         password2 = request.form["password2"]
-        if password1 != password2:
-            flash("Passwords don't match")
+
+        validation_error = users.register_user(username, password1, password2)
+        if validation_error is not None:
+            flash(validation_error, "Error")
             return render_template("register.html")
-        if users.register(username, password1):
+
+        if users.login(username, password1):
+            flash("Account succesfully created", "Success")
             return redirect("/")
-        else:
-            flash("Unknown error: Failed to create account")
-            return render_template("register.html")

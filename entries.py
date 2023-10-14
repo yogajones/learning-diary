@@ -8,7 +8,7 @@ def get_list(user_id):
     return result.fetchall()
 
 def send(content, user_id, learning_journey_id=None):
-    user_id = users.user_id()
+    user_id = users.get_user_id()
     if user_id == 0:
         return False
     if not learning_journey_id:

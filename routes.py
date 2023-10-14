@@ -4,7 +4,7 @@ import entries, users, journeys
 
 @app.route("/")
 def index():
-    user_id = users.user_id()
+    user_id = users.get_user_id()
     if user_id == 0:
             return redirect("/login")
     else:
@@ -13,13 +13,13 @@ def index():
 
 @app.route("/new")
 def new():
-    user_id = users.user_id()
+    user_id = users.get_user_id()
     learning_journeys = journeys.get_learning_journeys(user_id)
     return render_template("new.html", learning_journeys=learning_journeys)
 
 @app.route("/edit_entry/<int:entry_id>", methods=["GET", "POST"])
 def edit_entry(entry_id):
-    user_id = users.user_id()
+    user_id = users.get_user_id()
     if user_id == 0:
         return redirect("/login")
 
@@ -56,7 +56,7 @@ def edit_entry(entry_id):
 @app.route("/send", methods=["POST"])
 def send():
     content = request.form["content"]
-    user_id = users.user_id()
+    user_id = users.get_user_id()
     learning_journey_id = request.form.get("learning_journey_id")
     new_journey_title = request.form.get("new_journey_title")
     if new_journey_title:
@@ -69,7 +69,7 @@ def send():
 
 @app.route("/delete_entry/<int:entry_id>")
 def delete_entry(entry_id):
-    user_id = users.user_id()
+    user_id = users.get_user_id()
     if user_id == 0:
         flash("Unauthorized access", "Error")
         return redirect("/login")
@@ -87,7 +87,7 @@ def delete_entry(entry_id):
 
 @app.route("/confirm_delete/<int:entry_id>")
 def confirm_delete(entry_id):
-    user_id = users.user_id()
+    user_id = users.get_user_id()
     if user_id == 0:
         return redirect("/login")
 
@@ -141,4 +141,12 @@ def register():
 
 @app.route("/profile")
 def profile():
-    return redirect("/") # empty for now for testing purposes, will be added in the next commit
+    user_id = users.get_user_id()
+    if user_id == 0:
+        flash("Unauthorized access", "Error")
+        return redirect("/login")
+    
+    username = users.get_username(user_id)
+    entry_list = entries.get_list(user_id)
+
+    return render_template("profile.html", username=username, entry_count=len(entry_list))

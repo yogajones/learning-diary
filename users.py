@@ -46,5 +46,10 @@ def register_user(username, password1, password2):
     
     return None
 
-def user_id():
+def get_user_id():
     return session.get("user_id",0)
+
+def get_username(user_id):
+    sql = "SELECT username FROM users WHERE id = :user_id"
+    result = db.session.execute(text(sql), {"user_id": user_id})
+    return result.fetchone()[0]

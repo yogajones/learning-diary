@@ -6,12 +6,12 @@ CREATE TABLE users (
 CREATE TABLE learning_journeys (
     id SERIAL PRIMARY KEY,
     title TEXT,
-    user_id INTEGER REFERENCES users
+    user_id INTEGER REFERENCES users ON DELETE CASCADE
 );
 CREATE TABLE entries (
     id SERIAL PRIMARY KEY,
     content TEXT,
-    user_id INTEGER REFERENCES users,
+    user_id INTEGER REFERENCES users ON DELETE CASCADE,
     learning_journey_id INTEGER REFERENCES learning_journeys,
     sent_at TIMESTAMP
 );

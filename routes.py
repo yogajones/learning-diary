@@ -150,3 +150,26 @@ def profile():
     entry_list = entries.get_list(user_id)
 
     return render_template("profile.html", username=username, entry_count=len(entry_list))
+
+@app.route("/delete_account")
+def delete_account():
+    user_id = users.get_user_id()
+    if user_id == 0:
+        flash("Unauthorized access", "Error")
+        return redirect("/login")
+
+    return render_template("delete_account.html")
+
+@app.route("/confirm_delete_account")
+def confirm_delete_account():
+    user_id = users.get_user_id()
+    if user_id == 0:
+        flash("Unauthorized access", "Error")
+        return redirect("/login")
+    
+    if users.delete_account(user_id):
+        flash("Account deleted", "Success")
+        return redirect("/login")
+    else:
+        flash("Unknown error: Failed to delete account", "Error")
+        return redirect("/")

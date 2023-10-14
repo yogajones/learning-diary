@@ -2,6 +2,7 @@ from db import db
 from flask import session
 from sqlalchemy import text
 from werkzeug.security import check_password_hash, generate_password_hash
+import traceback
 
 def login(username, password):
     sql = "SELECT id, password FROM users WHERE username=:username"
@@ -53,3 +54,12 @@ def get_username(user_id):
     sql = "SELECT username FROM users WHERE id = :user_id"
     result = db.session.execute(text(sql), {"user_id": user_id})
     return result.fetchone()[0]
+
+def delete_account(user_id):
+    sql = "DELETE FROM users WHERE id = :user_id"
+    try:
+        db.session.execute(text(sql), {"user_id": user_id})
+        db.session.commit()
+        return True
+    except:
+        return False

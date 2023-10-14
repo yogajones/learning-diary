@@ -138,3 +138,7 @@ def register():
         if users.login(username, password1):
             flash("Account succesfully created", "Success")
             return redirect("/")
+
+@app.route("/profile")
+def profile():
+    return redirect("/") # empty for now for testing purposes, will be added in the next commit

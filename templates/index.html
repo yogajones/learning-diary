@@ -1,5 +1,7 @@
-{% extends "base.html" %}
-{% block content %}
+{% extends "user_base.html" %}
+{% block user_content %}
+Welcome!
+<br>
 Total entries: {{ count }}
 <hr>
 {% for message in messages %}
@@ -15,10 +17,5 @@ Total entries: {{ count }}
 {% endif %}
 <hr>
 {% endfor %}
-{% if session.user_id %}
-You are logged in.
-<a href="/new">New entry</a> | <a href="/logout">Log out</a>
-{% else %}
-<a href="/login">Log in</a>
-{% endif %}
+<a href="/new">New entry</a>
 {% endblock %}

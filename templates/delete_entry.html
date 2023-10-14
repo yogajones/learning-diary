@@ -1,5 +1,5 @@
-{% extends "base.html" %}
-{% block content %}
+{% extends "user_base.html" %}
+{% block user_content %}
 <p>Are you sure you want to delete the following entry?</p>
 <p><a href="/confirm_delete/{{ entry_id }}">Yes</a> | <a href="/">Cancel</a></p>
 <p><strong>Entry:</strong> {{ entry.content }}</p>

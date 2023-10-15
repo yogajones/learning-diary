@@ -1,8 +1,12 @@
 {% extends "user_base.html" %}
 {% block user_content %}
+<form action="/confirm_delete/{{ entry_id }}" method="post">
 <p>Are you sure you want to delete the following entry?</p>
-<p><a href="/confirm_delete/{{ entry_id }}">Yes</a> | <a href="/">Cancel</a></p>
+<input type="submit" value="Yes">
+<input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+<a href="/">Cancel</a>
 <p><strong>Entry:</strong> {{ entry.content }}</p>
 <p><strong>Learning Journey:</strong> {{ entry.title }}</p>
 <p><strong>Time:</strong> {{ entry.sent_at.strftime("%Y-%m-%d %H:%M:%S") }}</p>
+</form>
 {% endblock %}

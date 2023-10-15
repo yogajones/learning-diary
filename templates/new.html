@@ -12,5 +12,6 @@ Entry: <br>
 </select>
 <input type="text" name="new_journey_title" placeholder="Create a new journey">
 <input type="submit" value="Send">
+<input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
 </form>
 {% endblock %}

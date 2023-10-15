@@ -1,5 +1,9 @@
 {% extends "user_base.html" %}
 {% block user_content %}
+<form action="/confirm_delete_account" method="post">
+<input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
 <p>Are you sure you want to permanently delete your account and all your data?</p>
-<p><a href="/confirm_delete_account">Yes</a> | <a href="/">Cancel</a></p>
+<input type="submit" value="Yes">
+<a href="/">Cancel</a>
+</form>
 {% endblock %}

@@ -17,12 +17,11 @@
 {% endfor %}
 </select>
 <br>
-
 <label for="new_journey_title">Create a new learning journey:</label>
 <input type="text" name="new_journey_title">
 <br>
-
 <input type="submit" value="Save changes">
+<input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
 </form>
 <a href="/">Cancel</a>
 {% endblock %}

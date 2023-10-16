@@ -39,6 +39,13 @@ def update_entry_learning_journey(entry_id, new_learning_journey_id):
     db.session.commit()
 
 def delete_entry(entry_id):
-    sql = "DELETE FROM entries WHERE id=:entry_id"
+    sql = "SELECT tag_id FROM entry_tags WHERE entry_id = :entry_id"
+    db.session.execute(text(sql), {"entry_id": entry_id}).fetchall()
+
+    sql = "DELETE FROM entry_tags WHERE entry_id = :entry_id"
     db.session.execute(text(sql), {"entry_id": entry_id})
+
+    sql = "DELETE FROM entries WHERE id = :entry_id"
+    db.session.execute(text(sql), {"entry_id": entry_id})
+
     db.session.commit()

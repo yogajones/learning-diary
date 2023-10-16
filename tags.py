@@ -18,3 +18,8 @@ def create_tags(user_id, tag_names, entry_id):
         sql = "INSERT INTO entry_tags (entry_id, tag_id) SELECT :entry_id, T.id FROM tags T WHERE T.name=:tag_name AND T.user_id=:user_id"
         db.session.execute(text(sql), {"entry_id": entry_id, "tag_name": tag_name, "user_id": user_id})
     db.session.commit()
+
+def get_tags_by_entry_id(entry_id):
+    sql = "SELECT T.name FROM tags T JOIN entry_tags ET ON T.id = ET.tag_id WHERE ET.entry_id=:entry_id"
+    result = db.session.execute(text(sql), {"entry_id": entry_id})
+    return [row[0] for row in result.fetchall()]

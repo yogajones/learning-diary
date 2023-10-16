@@ -1,6 +1,6 @@
 from app import app
 from flask import abort, render_template, request, redirect, flash, session
-import entries, users, journeys
+import entries, users, journeys, tags
 
 @app.route("/")
 def index():
@@ -97,8 +97,11 @@ def delete_entry(entry_id):
     if entry.user_id != user_id:
         flash("Unauthorized access", "Error")
         return redirect("/")
+    
+    entry_tags = tags.get_tags_by_entry_id(entry_id)
 
-    return render_template("delete_entry.html", entry=entry, entry_id=entry_id)
+    return render_template("delete_entry.html", entry=entry, entry_id=entry_id, entry_tags=entry_tags)
+
 
 @app.route("/confirm_delete/<int:entry_id>", methods=["POST"])
 def confirm_delete(entry_id):

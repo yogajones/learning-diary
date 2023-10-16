@@ -8,5 +8,10 @@
 <p><strong>Entry:</strong> {{ entry.content }}</p>
 <p><strong>Learning Journey:</strong> {{ entry.title }}</p>
 <p><strong>Time:</strong> {{ entry.sent_at.strftime("%Y-%m-%d %H:%M:%S") }}</p>
+<p><strong>Tags:</strong>
+{% for tag in entry_tags %}
+{{ tag }}{% if not loop.last %}, {% endif %}
+{% endfor %}
+</p>
 </form>
 {% endblock %}

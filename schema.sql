@@ -15,13 +15,13 @@ CREATE TABLE entries (
     learning_journey_id INTEGER REFERENCES learning_journeys,
     sent_at TIMESTAMP
 );
-CREATE TABLE entry_tags (
-    id SERIAL PRIMARY KEY,
-    entry_id INT REFERENCES entries,
-    tag_id INT REFERENCES tags ON DELETE CASCADE
-);
 CREATE TABLE tags (
     id SERIAL PRIMARY KEY,
     name TEXT NOT NULL,
     user_id INTEGER REFERENCES users ON DELETE CASCADE
+);
+CREATE TABLE entry_tags (
+    id SERIAL PRIMARY KEY,
+    entry_id INT REFERENCES entries,
+    tag_id INT REFERENCES tags ON DELETE CASCADE
 );

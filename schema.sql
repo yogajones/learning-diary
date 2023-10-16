@@ -17,11 +17,11 @@ CREATE TABLE entries (
 );
 CREATE TABLE entry_tags (
     id SERIAL PRIMARY KEY,
-    entry_id INT REFERENCES entries ON DELETE CASCADE,
+    entry_id INT REFERENCES entries,
     tag_id INT REFERENCES tags ON DELETE CASCADE
 );
 CREATE TABLE tags (
     id SERIAL PRIMARY KEY,
     name TEXT NOT NULL,
-    user_id INTEGER REFERENCES users ON DELETE CASCADE,
+    user_id INTEGER REFERENCES users ON DELETE CASCADE
 );

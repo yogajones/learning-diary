@@ -20,8 +20,7 @@ CREATE TABLE entry_tags (
     entry_id INT REFERENCES entries ON DELETE CASCADE,
     tag_id INT REFERENCES tags ON DELETE CASCADE
 );
-
 CREATE TABLE tags (
     id SERIAL PRIMARY KEY,
-    name TEXT NOT NULL
+    name TEXT UNIQUE NOT NULL
 );

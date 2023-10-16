@@ -19,7 +19,7 @@ def send(content, user_id, learning_journey_id=None):
     return True
 
 def get_entry_by_id(entry_id):
-    sql = "SELECT * FROM entries M WHERE id=:entry_id"
+    sql = "SELECT id, content, user_id, learning_journey_id, sent_at FROM entries WHERE id=:entry_id"
     result = db.session.execute(text(sql), {"entry_id": entry_id})
     entry = result.fetchone()
     return entry

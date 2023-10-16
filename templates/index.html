@@ -4,16 +4,16 @@ Welcome!
 <br>
 Total entries: {{ count }}
 <hr>
-{% for message in messages %}
-<i>Entry:</i> {{ message[0] }}
-{% if message[3] %}
-<p><i>Learning Journey:</i> {{ message[3] }}</p>
+{% for entry in entries %}
+<i>Entry:</i> {{ entry[0] }}
+{% if entry[3] %}
+<p><i>Learning Journey:</i> {{ entry[3] }}</p>
 {% else %}
 <br><br>
 {% endif %}
-<i>Time:</i> {{ message[2].strftime("%Y-%m-%d %H:%M:%S") }}
+<i>Time:</i> {{ entry[2].strftime("%Y-%m-%d %H:%M:%S") }}
 {% if session.user_id %}
-<a href="/edit_entry/{{ message[4] }}">Edit</a> | <a href="/delete_entry/{{ message[4] }}">Delete</a>
+<a href="/edit_entry/{{ entry[4] }}">Edit</a> | <a href="/delete_entry/{{ entry[4] }}">Delete</a>
 {% endif %}
 <hr>
 {% endfor %}

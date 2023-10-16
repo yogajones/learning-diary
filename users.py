@@ -1,32 +1,35 @@
-from db import db
+"""Module to handle user-related queries"""
+import secrets
+from werkzeug.security import check_password_hash, generate_password_hash
 from flask import session
 from sqlalchemy import text
-from werkzeug.security import check_password_hash, generate_password_hash
-import secrets
+from db import db
+
 
 def login(username, password):
     sql = "SELECT id, password FROM users WHERE username=:username"
-    result = db.session.execute(text(sql), {"username":username})
+    result = db.session.execute(text(sql), {"username": username})
     user = result.fetchone()
     if not user:
         return False
-    else:
-        if check_password_hash(user.password, password):
-            session["user_id"] = user.id
-            csrf_token = secrets.token_hex(16)
-            session["csrf_token"] = csrf_token
-            return True
-        else:
-            return False
+    if check_password_hash(user.password, password):
+        session["user_id"] = user.id
+        csrf_token = secrets.token_hex(16)
+        session["csrf_token"] = csrf_token
+        return True
+    return False
+
 
 def logout():
     del session["user_id"]
     del session["csrf_token"]
 
+
 def username_available(username):
     sql = "SELECT 1 FROM users WHERE username = :username"
     result = db.session.execute(text(sql), {"username": username})
     return result.fetchone() is None
+
 
 def register_user(username, password1, password2):
     if not username:
@@ -43,20 +46,23 @@ def register_user(username, password1, password2):
     hash_value = generate_password_hash(password1)
     try:
         sql = "INSERT INTO users (username,password) VALUES (:username, :password)"
-        db.session.execute(text(sql), {"username":username, "password":hash_value})
+        db.session.execute(text(sql), {"username": username, "password": hash_value})
         db.session.commit()
     except:
         return "Unknown error: Failed to create account"
-    
+
     return None
 
+
 def get_user_id():
-    return session.get("user_id",0)
+    return session.get("user_id", 0)
+
 
 def get_username(user_id):
     sql = "SELECT username FROM users WHERE id = :user_id"
     result = db.session.execute(text(sql), {"user_id": user_id})
     return result.fetchone()[0]
+
 
 def delete_account(user_id):
     sql = "DELETE FROM users WHERE id = :user_id"

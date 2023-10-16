@@ -20,6 +20,9 @@
 <label for="new_journey_title">Create a new learning journey:</label>
 <input type="text" name="new_journey_title">
 <br>
+<label for="tags">Tags:</label>
+<input type="text" name="tags" value="{{ entry_tags }}"> <!--again, remind the user to separate tags with space-->
+<br>
 <input type="submit" value="Save changes">
 <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
 </form>

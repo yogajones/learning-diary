@@ -60,6 +60,7 @@ def edit_entry(entry_id):
         return redirect("/")
 
     current_learning_journey = journeys.get_learning_journey_by_id(entry.learning_journey_id)
+    entry_tags = ', '.join(tags.get_tags_by_entry_id(entry_id))
 
     if request.method == "POST":
         if session["csrf_token"] != request.form["csrf_token"]:
@@ -67,7 +68,8 @@ def edit_entry(entry_id):
         new_content = request.form["content"]
         new_learning_journey_id = request.form.get("learning_journey_id")
         new_journey_title = request.form.get("new_journey_title")
-        
+        new_tags = request.form["tags"]
+
         if new_learning_journey_id == "":
             new_learning_journey_id = None
 
@@ -76,11 +78,12 @@ def edit_entry(entry_id):
 
         entries.update_entry_content(entry_id, new_content)
         entries.update_entry_learning_journey(entry_id, new_learning_journey_id)
+        tags.update_tags(user_id, new_tags, entry_id)
 
         return redirect("/")
 
     learning_journeys = journeys.get_learning_journeys(user_id)
-    return render_template("edit_entry.html", entry=entry, entry_id=entry_id, entry_content=entry.content, learning_journeys=learning_journeys, entry_learning_journey=current_learning_journey)
+    return render_template("edit_entry.html", entry=entry, entry_id=entry_id, entry_content=entry.content, learning_journeys=learning_journeys, entry_learning_journey=current_learning_journey, entry_tags=entry_tags)
 
 @app.route("/delete_entry/<int:entry_id>")
 def delete_entry(entry_id):

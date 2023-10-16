@@ -17,7 +17,7 @@ def send(content, user_id, learning_journey_id=None, tag_names=None):
 
     if tag_names:
         entry_id = result.scalar()
-        tags.create_tags(user_id, tag_names, entry_id)
+        tags.create_tags_from_string(user_id, tag_names, entry_id)
 
     db.session.commit()
     return True

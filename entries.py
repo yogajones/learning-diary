@@ -1,20 +1,24 @@
 from db import db
 from sqlalchemy import text
-import users
+import users, tags
 
 def get_list(user_id):
     sql = "SELECT E.content, U.username, E.sent_at, LJ.title, E.id FROM entries E JOIN users U ON E.user_id = U.id LEFT JOIN learning_journeys LJ ON E.learning_journey_id = LJ.id WHERE E.user_id = :user_id ORDER BY E.sent_at DESC"
     result = db.session.execute(text(sql), {"user_id": user_id})
     return result.fetchall()
 
-def send(content, user_id, learning_journey_id=None):
+def send(content, user_id, learning_journey_id=None, tag_names=None):
     user_id = users.get_user_id()
     if user_id == 0:
         return False
-    if not learning_journey_id:
-        learning_journey_id = None
-    sql = "INSERT INTO entries (content, user_id, learning_journey_id, sent_at) VALUES (:content, :user_id, :learning_journey_id, NOW())"
-    db.session.execute(text(sql), {"content": content, "user_id": user_id, "learning_journey_id": learning_journey_id})
+
+    sql = "INSERT INTO entries (content, user_id, learning_journey_id, sent_at) VALUES (:content, :user_id, :learning_journey_id, NOW()) RETURNING id"
+    result = db.session.execute(text(sql), {"content": content, "user_id": user_id, "learning_journey_id": learning_journey_id})
+
+    if tag_names:
+        entry_id = result.scalar()
+        tags.create_tags(user_id, tag_names, entry_id)
+
     db.session.commit()
     return True
 

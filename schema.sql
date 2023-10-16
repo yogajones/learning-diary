@@ -18,7 +18,8 @@ CREATE TABLE entries (
 CREATE TABLE tags (
     id SERIAL PRIMARY KEY,
     name TEXT NOT NULL,
-    user_id INTEGER REFERENCES users ON DELETE CASCADE
+    user_id INTEGER REFERENCES users ON DELETE CASCADE,
+    UNIQUE (name, user_id)
 );
 CREATE TABLE entry_tags (
     id SERIAL PRIMARY KEY,

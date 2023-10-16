@@ -32,10 +32,12 @@ def send():
     
     content = request.form["content"]
     learning_journey_id = request.form.get("learning_journey_id")
+    tags = request.form.get("tags")
     new_journey_title = request.form.get("new_journey_title")
     if new_journey_title:
         learning_journey_id = journeys.create_learning_journey(new_journey_title, user_id)
-    if entries.send(content, user_id, learning_journey_id):
+    
+    if entries.send(content, user_id, learning_journey_id, tags):
         return redirect("/")
     else:
         flash("Failed to submit entry", "Error")

@@ -22,5 +22,6 @@ CREATE TABLE entry_tags (
 );
 CREATE TABLE tags (
     id SERIAL PRIMARY KEY,
-    name TEXT UNIQUE NOT NULL
+    name TEXT NOT NULL,
+    user_id INTEGER REFERENCES users ON DELETE CASCADE,
 );

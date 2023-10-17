@@ -23,7 +23,7 @@ CREATE TABLE tags (
 );
 CREATE TABLE entry_tags (
     id SERIAL PRIMARY KEY,
-    entry_id INT REFERENCES entries,
+    entry_id INT REFERENCES entries ON DELETE CASCADE,
     tag_id INT REFERENCES tags ON DELETE CASCADE
 );
 CREATE TABLE breakthroughs (

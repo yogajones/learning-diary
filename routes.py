@@ -6,7 +6,6 @@ import users
 import journeys
 import tags
 
-
 @app.route("/")
 def index():
     user_id = users.get_user_id()
@@ -14,7 +13,7 @@ def index():
         return redirect("/login")
 
     entry_list = entries.get_list(user_id)
-    return render_template("index.html", count=len(list), entries=entry_list)
+    return render_template("index.html", count=len(entry_list), entries=entry_list)
 
 
 @app.route("/new")

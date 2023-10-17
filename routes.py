@@ -6,6 +6,14 @@ import users
 import journeys
 import tags
 
+@app.before_request
+def check_authentication():
+    if request.endpoint not in ["login", "/", "register"]:
+        user_id = users.get_user_id()
+        if user_id == 0:
+            flash("Please log in to continue", "User not found")
+            return redirect("/login")
+
 @app.route("/")
 def index():
     user_id = users.get_user_id()
@@ -19,9 +27,6 @@ def index():
 @app.route("/new")
 def new():
     user_id = users.get_user_id()
-    if user_id == 0:
-        flash("Unauthorized access", "Error")
-        return redirect("/login")
     learning_journeys = journeys.get_learning_journeys(user_id)
     return render_template("new.html", learning_journeys=learning_journeys)
 
@@ -29,9 +34,6 @@ def new():
 @app.route("/send", methods=["POST"])
 def send():
     user_id = users.get_user_id()
-    if user_id == 0:
-        flash("Unauthorized access", "Error")
-        return redirect("/login")
     if session["csrf_token"] != request.form["csrf_token"]:
         abort(403)
 
@@ -53,10 +55,6 @@ def send():
 @app.route("/edit_entry/<int:entry_id>", methods=["GET", "POST"])
 def edit_entry(entry_id):
     user_id = users.get_user_id()
-    if user_id == 0:
-        flash("Unauthorized access", "Error")
-        return redirect("/login")
-
     entry = entries.get_entry_by_id(entry_id)
 
     if not entry:
@@ -104,10 +102,6 @@ def edit_entry(entry_id):
 @app.route("/delete_entry/<int:entry_id>")
 def delete_entry(entry_id):
     user_id = users.get_user_id()
-    if user_id == 0:
-        flash("Unauthorized access", "Error")
-        return redirect("/login")
-
     entry = entries.get_entry_by_id(entry_id)
 
     if not entry:
@@ -129,12 +123,10 @@ def delete_entry(entry_id):
 
 @app.route("/confirm_delete/<int:entry_id>", methods=["POST"])
 def confirm_delete(entry_id):
-    user_id = users.get_user_id()
-    if user_id == 0:
-        return redirect("/login")
     if session["csrf_token"] != request.form["csrf_token"]:
         abort(403)
 
+    user_id = users.get_user_id()
     entry = entries.get_entry_by_id(entry_id)
 
     if not entry:
@@ -164,7 +156,7 @@ def login():
 @app.route("/logout")
 def logout():
     users.logout()
-    return redirect("/")
+    return redirect("/login")
 
 
 @app.route("/register", methods=["GET", "POST"])
@@ -189,10 +181,6 @@ def register():
 @app.route("/profile")
 def profile():
     user_id = users.get_user_id()
-    if user_id == 0:
-        flash("Unauthorized access", "Error")
-        return redirect("/login")
-
     username = users.get_username(user_id)
     entry_list = entries.get_list(user_id)
 
@@ -205,20 +193,12 @@ def profile():
 
 @app.route("/delete_account")
 def delete_account():
-    user_id = users.get_user_id()
-    if user_id == 0:
-        flash("Unauthorized access", "Error")
-        return redirect("/login")
-
     return render_template("delete_account.html")
 
 
 @app.route("/confirm_delete_account", methods=["POST"])
 def confirm_delete_account():
     user_id = users.get_user_id()
-    if user_id == 0:
-        flash("Unauthorized access", "Error")
-        return redirect("/login")
     if session["csrf_token"] != request.form["csrf_token"]:
         abort(403)
 

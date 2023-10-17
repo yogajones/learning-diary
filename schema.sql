@@ -26,3 +26,8 @@ CREATE TABLE entry_tags (
     entry_id INT REFERENCES entries,
     tag_id INT REFERENCES tags ON DELETE CASCADE
 );
+CREATE TABLE breakthroughs (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER REFERENCES users ON DELETE CASCADE,
+    entry_id INTEGER REFERENCES entries ON DELETE CASCADE
+);

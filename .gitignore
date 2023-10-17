@@ -6,3 +6,5 @@ venv/
 __pycache__/
 # Ignore vscode config
 .vscode/
+# Ignore pylint config
+.pylintrc

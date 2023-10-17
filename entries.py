@@ -6,10 +6,15 @@ import tags
 
 
 def get_list(user_id):
-    sql = """SELECT E.content, U.username, E.sent_at, LJ.title, E.id
-             FROM entries E JOIN users U ON E.user_id = U.id
+    sql = """SELECT E.content, U.username, E.sent_at, LJ.title, E.id, array_agg(T.name) AS tags
+             FROM entries E
+             JOIN users U ON E.user_id = U.id
              LEFT JOIN learning_journeys LJ ON E.learning_journey_id = LJ.id
-             WHERE E.user_id = :user_id ORDER BY E.sent_at DESC"""
+             LEFT JOIN entry_tags ET ON E.id = ET.entry_id
+             LEFT JOIN tags T ON ET.tag_id = T.id
+             WHERE E.user_id = :user_id
+             GROUP BY E.id, U.username, LJ.title
+             ORDER BY E.sent_at DESC"""
     result = db.session.execute(text(sql), {"user_id": user_id})
     return result.fetchall()
 

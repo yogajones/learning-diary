@@ -1,21 +1,23 @@
 {% extends "user_base.html" %}
 {% block user_content %}
-Welcome!
-<br>
-Total entries: {{ count }}
+Welcome!<br>
+<p>Total entries: {{ count }}</p>
+<a href="/new">New entry</a>
 <hr>
 {% for entry in entries %}
-<i>Entry:</i> {{ entry[0] }}
+<i>Entry:</i> {{ entry[0] }}<br>
 {% if entry[3] %}
 <p><i>Learning Journey:</i> {{ entry[3] }}</p>
-{% else %}
-<br><br>
 {% endif %}
-<i>Time:</i> {{ entry[2].strftime("%Y-%m-%d %H:%M:%S") }}
+{% if entry[5] %}
+<p><i>Tags:</i> 
+{% for tag in entry[5] %} #{{ tag }}
+{% endfor %}</p>
+{% endif %}
+<p><i>Time:</i> {{ entry[2].strftime("%Y-%m-%d %H:%M:%S") }}</p>
 {% if session.user_id %}
-<a href="/edit_entry/{{ entry[4] }}">Edit</a> | <a href="/delete_entry/{{ entry[4] }}">Delete</a>
+<a href="/edit_entry/{{ entry[4] }}">Edit</a> | <a href="/delete_entry/{{ entry[4] }}">Delete</a><br>
 {% endif %}
 <hr>
 {% endfor %}
-<a href="/new">New entry</a>
 {% endblock %}

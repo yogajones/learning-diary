@@ -3,23 +3,29 @@ from sqlalchemy import text
 from db import db
 import users
 import tags
-
+import breakthroughs
 
 def get_list(user_id):
-    sql = """SELECT E.content, U.username, E.sent_at, LJ.title, E.id, array_agg(T.name) AS tags
+    sql = """SELECT E.content, U.username, E.sent_at, LJ.title, E.id,
+             array_agg(T.name) as tags,
+             B.entry_id IS NOT NULL as has_breakthrough
              FROM entries E
              JOIN users U ON E.user_id = U.id
              LEFT JOIN learning_journeys LJ ON E.learning_journey_id = LJ.id
-             LEFT JOIN entry_tags ET ON E.id = ET.entry_id
+             LEFT JOIN entry_tags ET ON ET.entry_id = E.id
              LEFT JOIN tags T ON ET.tag_id = T.id
+             LEFT JOIN LATERAL (
+                SELECT entry_id FROM breakthroughs B
+                WHERE B.user_id = :user_id AND B.entry_id = E.id
+                ) B ON true
              WHERE E.user_id = :user_id
-             GROUP BY E.id, U.username, LJ.title
+             GROUP BY E.id, U.username, LJ.title, B.entry_id
              ORDER BY E.sent_at DESC"""
     result = db.session.execute(text(sql), {"user_id": user_id})
     return result.fetchall()
 
 
-def send(content, user_id, learning_journey_id=None, tag_names=None):
+def send(content, user_id, learning_journey_id=None, tag_names=None, breakthrough=False):
     user_id = users.get_user_id()
     if user_id == 0:
         return False
@@ -36,9 +42,13 @@ def send(content, user_id, learning_journey_id=None, tag_names=None):
         },
     )
 
+    entry_id = result.scalar()
+
     if tag_names:
-        entry_id = result.scalar()
         tags.create_tags_from_string(user_id, tag_names, entry_id)
+
+    if breakthrough:
+        breakthroughs.process(user_id, entry_id, breakthrough)
 
     db.session.commit()
     return True

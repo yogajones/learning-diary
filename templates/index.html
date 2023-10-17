@@ -6,6 +6,9 @@ Welcome!<br>
 <hr>
 {% for entry in entries %}
 <i>Entry:</i> {{ entry[0] }}<br>
+{% if entry[6] %}
+<p><strong>Heureka!</strong></p>
+{% endif %}
 {% if entry[3] %}
 <p><i>Learning Journey:</i> {{ entry[3] }}</p>
 {% endif %}

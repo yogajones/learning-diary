@@ -12,7 +12,12 @@ Tags: <input type="text" name="tags"> <!--remember to guide the user that these 
 <option value="{{ journey.id }}">{{ journey.title }}</option>
 {% endfor %}
 </select>
+<br>
 <input type="text" name="new_journey_title" placeholder="Create a new journey">
+<br>
+<input type="checkbox" name="breakthrough" value="False">
+<label for="breakthrough">Breakthrough?</label>
+<br>
 <input type="submit" value="Send">
 <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
 </form>

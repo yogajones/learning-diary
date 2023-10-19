@@ -18,25 +18,19 @@ def get(user_id):
 
 
 def attach(user_id, entry_id):
-    sql = """INSERT INTO breakthroughs (user_id, entry_id)
-             VALUES (:user_id, :entry_id)
-             ON CONFLICT (user_id, entry_id) DO NOTHING"""
+    sql = "INSERT INTO breakthroughs (user_id, entry_id)VALUES (:user_id, :entry_id)"
     db.session.execute(text(sql), {"user_id": user_id, "entry_id": entry_id})
     db.session.commit()
 
 
 def delete(user_id, entry_id):
-    sql = """DELETE FROM breakthroughs
-             WHERE user_id = :user_id AND entry_id = :entry_id
-             AND EXISTS (
-             SELECT 1 FROM breakthroughs
-             WHERE user_id = :user_id AND entry_id = :entry_id)"""
+    sql = "DELETE FROM breakthroughs WHERE user_id = :user_id AND entry_id = :entry_id"
     db.session.execute(text(sql), {"user_id": user_id, "entry_id": entry_id})
     db.session.commit()
 
 
 def process(user_id, entry_id, breakthrough):
-    if breakthrough:
+    if breakthrough and not exists(user_id, entry_id):
         attach(user_id, entry_id)
-    else:
+    if not breakthrough and exists(user_id, entry_id):
         delete(user_id, entry_id)

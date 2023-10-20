@@ -1,9 +1,17 @@
 {% extends "user_base.html" %}
 {% block user_content %}
-<form action="/confirm_delete_account" method="post">
-<input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
-<p>Are you sure you want to permanently delete your account and all your data?</p>
-<input type="submit" value="Yes">
-<a href="/">Cancel</a>
-</form>
+<div class="container mt-5">
+    <form action="/confirm_delete_account" method="post">
+        <p class="lead">Are you sure you want to permanently delete your account and all your data?</p>
+        <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+        <div class="form-group">
+            <div class="row">
+                <div class="col mt-5">
+                    <input type="submit" class="btn btn-danger" value="Yes">
+                    <a class="btn btn-secondary" href="/profile">Cancel</a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
 {% endblock %}

@@ -1,24 +1,42 @@
 {% extends "user_base.html" %}
 {% block user_content %}
-<form action="/send" method="post">
-Entry: <br>
-<textarea name="content" rows="3" cols="40"></textarea>
-<br>
-Tags: <input type="text" name="tags"> <!--remember to guide the user that these are separated by space-->
-<br>
-<select name="learning_journey_id">
-<option value="">Select a learning journey</option>
-{% for journey in learning_journeys %}
-<option value="{{ journey.id }}">{{ journey.title }}</option>
-{% endfor %}
-</select>
-<br>
-<input type="text" name="new_journey_title" placeholder="Create a new journey">
-<br>
-<input type="checkbox" name="breakthrough" value="False">
-<label for="breakthrough">Breakthrough?</label>
-<br>
-<input type="submit" value="Send">
-<input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
-</form>
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-6">
+            <form action="/send" method="post">
+                <div class="form-group">
+                    <label for="content">Entry:</label>
+                    <textarea class="form-control" name="content" id="content" rows="5" cols="50" required></textarea>
+                </div>
+                <br>
+                <div class="form-group">
+                    <label for="tags">Tags (separated by spaces):</label>
+                    <input type="text" class="form-control" name="tags" id="tags">
+                </div>
+                <br>
+                <div class="form-group">
+                    <label for="learning_journey_id">Select a learning journey:</label>
+                    <select class="form-control" name="learning_journey_id" id="learning_journey_id">
+                        <option value="">Select a learning journey</option>
+                        {% for journey in learning_journeys %}
+                        <option value="{{ journey.id }}">{{ journey.title }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control" name="new_journey_title" id="new_journey_title"
+                        placeholder="..or begin a new journey">
+                </div>
+                <br>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" name="breakthrough" id="breakthrough" value="True">
+                    <label class="form-check-label" for="breakthrough">Breakthrough?</label>
+                </div>
+                <br>
+                <input type="submit" class="btn btn-primary" value="Send">
+                <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+            </form>
+        </div>
+    </div>
+</div>
 {% endblock %}

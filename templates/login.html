@@ -1,11 +1,25 @@
 {% extends "base.html" %}
 {% block content %}
-<form action="/login" method="post">
-Username: <input type="text" name="username">
-<p>
-Password: <input type="password" name="password">
-<p>
-<input type="submit" value="Log in">
-</form>
-New user? Create an account <a href="/register">here</a>.
+<div class="container d-flex justify-content-center align-items-center mt-5">
+    <form class="col-8 col-md-6 col-lg-4" action="/login" method="post">
+        <h1 class="mb-5 text-center">Welcome to your Lifelong Learning Diary</h1>
+        <div class="form-group">
+            <input type="text" class="form-control" id="username" name="username" placeholder="Username" required>
+        </div>
+        <div class="form-group">
+            <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
+        </div>
+        <div class="d-flex justify-content-center mt-4">
+            <button type="submit" class="btn btn-primary">Log in</button>
+        </div>
+        <div class="d-flex justify-content-center mt-4">
+            New user?&nbsp;<a href="/register">Create an account.</a>
+        </div>
+    </form>
+</div>
+<style>
+    .form-group {
+        margin-bottom: 10px;
+    }
+</style>
 {% endblock %}

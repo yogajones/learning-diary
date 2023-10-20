@@ -1,17 +1,30 @@
 {% extends "user_base.html" %}
 {% block user_content %}
-<form action="/confirm_delete/{{ entry_id }}" method="post">
-<p>Are you sure you want to delete the following entry?</p>
-<input type="submit" value="Yes">
-<input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
-<a href="/">Cancel</a>
-<p><strong>Entry:</strong> {{ entry.content }}</p>
-<p><strong>Learning Journey:</strong> {{ entry.title }}</p>
-<p><strong>Time:</strong> {{ entry.sent_at.strftime("%Y-%m-%d %H:%M:%S") }}</p>
-<p><strong>Tags:</strong>
-{% for tag in entry_tags %}
-{{ tag }}{% if not loop.last %}, {% endif %}
-{% endfor %}
-</p>
-</form>
+<div class="container mt-5">
+    <form action="/confirm_delete/{{ entry_id }}" method="post">
+        <p class="lead">Are you sure you want to delete the following entry?</p>
+        <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+        <p class="mt-3"><strong>Entry:</strong> {{ entry.content }}</p>
+        {% if entry.title %}
+        <p><strong>Learning Journey:</strong> {{ entry.title }}</p>
+        {% endif %}
+        <p><strong>Tags:&nbsp;</strong>
+            {% if entry_breakthrough %}
+            <span class="badge breakthrough-badge">breakthrough</span>
+            {% endif %}
+            {% for tag in entry_tags %}
+            <span class="badge tag-badge">{{ tag }}</span>
+            {% endfor %}
+        </p>
+        <p>Saved on&nbsp;{{ entry.sent_at.strftime("%d %B %Y %H:%M") }}</p>
+        <div class="form-group">
+            <div class="row">
+                <div class="col mt-5">
+                    <input type="submit" class="btn btn-danger" value="Yes">
+                    <a class="btn btn-secondary" href="/">Cancel</a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
 {% endblock %}

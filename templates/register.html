@@ -1,12 +1,32 @@
 {% extends "base.html" %}
 {% block content %}
-<form action="/register" method="post">
-Username: <input type="text" name="username">
-<p>
-Password: <input type="password" name="password1">
-<p>
-Confirm password: <input type="password" name="password2">
-<p>
-<input type="submit" value="Create Account">
-</form>
+
+<div class="container d-flex justify-content-center align-items-center">
+    <form class="col-8 col-md-6 col-lg-4" action="/register" method="post">
+        <h3 class="mb-4 text-center">Register</h3>
+        <div class="form-group">
+            <label for="username">Username:</label>
+            <input type="text" class="form-control" id="username" name="username" required>
+        </div>
+        <div class="form-group">
+            <label for="password1">Password:</label>
+            <input type="password" class="form-control" id="password1" name="password1" required>
+        </div>
+        <div class="form-group">
+            <label for="password2">Confirm password:</label>
+            <input type="password" class="form-control" id="password2" name="password2" required>
+        </div>
+        <div class="d-flex justify-content-center mt-4">
+            <button type="submit" class="btn btn-primary">Create account</button>
+        </div>
+        <div class="d-flex justify-content-center mt-4">
+            <p>Already have an account? <a href="/login">Login</a></p>
+        </div>
+    </form>
+</div>
+<style>
+    .form-group {
+        margin-bottom: 10px;
+    }
+</style>
 {% endblock %}

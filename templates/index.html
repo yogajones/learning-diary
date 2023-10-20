@@ -1,26 +1,42 @@
 {% extends "user_base.html" %}
 {% block user_content %}
-Welcome!<br>
-<p>Total entries: {{ count }}</p>
-<a href="/new">New entry</a>
-<hr>
-{% for entry in entries %}
-<i>Entry:</i> {{ entry[0] }}<br>
-{% if entry[6] %}
-<p><strong>Heureka!</strong></p>
-{% endif %}
-{% if entry[3] %}
-<p><i>Learning Journey:</i> {{ entry[3] }}</p>
-{% endif %}
-{% if entry[5] %}
-<p><i>Tags:</i> 
-{% for tag in entry[5] %} #{{ tag }}
-{% endfor %}</p>
-{% endif %}
-<p><i>Time:</i> {{ entry[2].strftime("%Y-%m-%d %H:%M:%S") }}</p>
-{% if session.user_id %}
-<a href="/edit_entry/{{ entry[4] }}">Edit</a> | <a href="/delete_entry/{{ entry[4] }}">Delete</a><br>
-{% endif %}
-<hr>
-{% endfor %}
+<div class="container mt-5">
+    <h1>Welcome!</h1>
+    <a class="btn btn-primary" href="/new">New entry</a>
+    <hr>
+    {% for entry in entries %}
+    <div class="entry-card mt-3">
+        <div class="row">
+            <div class="col-6">
+                <p>Saved on {{ entry[2].strftime("%d %B %Y %H:%M") }}</p>
+            </div>
+            <div class="col-6">
+                <div class="action-links">
+                    <a class="btn btn-warning btn-sm" href="/edit_entry/{{ entry[4] }}">Edit</a>
+                    <a class="btn btn-danger btn-sm" href="/delete_entry/{{ entry[4] }}">Delete</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            {% if entry[3] %}
+            <div class="col-12">
+                <p><strong>Learning Journey:</strong> {{ entry[3] }}</p>
+            </div>
+            {% endif %}
+        </div>
+
+        <p>{{ entry[0] }}</p>
+        {% if entry[6] %}
+        <span class="badge breakthrough-badge">breakthrough</span>
+        {% endif %}
+        {% if entry[5] != [None] %}
+        {% for tag in entry[5] %}
+        <span class="badge tag-badge">{{ tag }}</span>
+        {% endfor %}
+        {% endif %}
+    </div>
+    <hr>
+    {% endfor %}
+</div>
 {% endblock %}

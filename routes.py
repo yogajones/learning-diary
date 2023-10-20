@@ -49,6 +49,7 @@ def send():
         )
 
     if entries.send(content, user_id, learning_journey_id, tags_input, breakthrough):
+        flash("Entry created!", "Success")
         return redirect("/")
     flash("Failed to submit entry", "Error")
     return redirect("/send")
@@ -90,6 +91,7 @@ def edit_entry(entry_id):
         tags.update_tags(user_id, new_tags, entry_id)
         breakthroughs.process(user_id, entry_id, new_breakthrough)
 
+        flash("Entry updated!", "Success")
         return redirect("/")
 
     learning_journeys = journeys.get_learning_journeys(user_id)
@@ -145,6 +147,7 @@ def confirm_delete(entry_id):
         return redirect("/")
 
     entries.delete_entry(entry_id)
+    flash("Entry deleted!", "Success")
     return redirect("/")
 
 

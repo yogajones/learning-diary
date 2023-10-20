@@ -118,12 +118,14 @@ def delete_entry(entry_id):
         return redirect("/")
 
     entry_tags = tags.get_tags_by_entry_id(entry_id)
+    entry_breakthrough = breakthroughs.exists(user_id, entry_id)
 
     return render_template(
         "delete_entry.html",
         entry=entry,
         entry_id=entry_id,
-        entry_tags=entry_tags
+        entry_tags=entry_tags,
+        entry_breakthrough=entry_breakthrough
     )
 
 

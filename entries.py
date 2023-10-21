@@ -4,6 +4,8 @@ from db import db
 import users
 import tags
 import breakthroughs
+import journeys
+
 
 def get_list(user_id):
     sql = """SELECT E.content, U.username, E.sent_at, LJ.title, E.id,
@@ -88,3 +90,21 @@ def delete_entry(entry_id):
     db.session.execute(text(sql), {"entry_id": entry_id})
 
     db.session.commit()
+
+
+def process_update(user_id, entry_id, new_content, new_journey_title, new_learning_journey_id, new_tags, new_breakthrough):
+    try:
+        if new_learning_journey_id == "":
+            new_learning_journey_id = None
+
+        if new_journey_title:
+            new_learning_journey_id = journeys.create(
+                new_journey_title, user_id
+            )
+        update_entry_content(entry_id, new_content)
+        update_entry_learning_journey(entry_id, new_learning_journey_id)
+        tags.update(user_id, new_tags, entry_id)
+        breakthroughs.process(user_id, entry_id, new_breakthrough)
+        return True
+    except:
+        return False

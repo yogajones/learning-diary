@@ -3,7 +3,7 @@ from sqlalchemy import text
 from db import db
 
 
-def create_learning_journey(title, user_id):
+def create(title, user_id):
     sql = "INSERT INTO learning_journeys (title, user_id) VALUES (:title, :user_id) RETURNING id"
     result = db.session.execute(text(sql), {"title": title, "user_id": user_id})
     db.session.commit()
@@ -11,13 +11,13 @@ def create_learning_journey(title, user_id):
     return journey_id
 
 
-def get_learning_journeys(user_id):
+def get_all(user_id):
     sql = "SELECT id, title FROM learning_journeys WHERE user_id=:user_id"
     result = db.session.execute(text(sql), {"user_id": user_id})
     return result.fetchall()
 
 
-def get_learning_journey_by_id(learning_journey_id):
+def get_one(learning_journey_id):
     sql = "SELECT id, title, user_id FROM learning_journeys WHERE id=:learning_journey_id"
     result = db.session.execute(text(sql), {"learning_journey_id": learning_journey_id})
     learning_journey = result.fetchone()

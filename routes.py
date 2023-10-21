@@ -30,7 +30,7 @@ def index():
 @app.route("/new")
 def new():
     user_id = users.get_user_id()
-    learning_journeys = journeys.get_learning_journeys(user_id)
+    learning_journeys = journeys.get_all(user_id)
     return render_template("new.html", learning_journeys=learning_journeys)
 
 
@@ -48,7 +48,7 @@ def send():
         request.form.get("breakthrough"),
     )
     if new_journey_title:
-        learning_journey_id = journeys.create_learning_journey(
+        learning_journey_id = journeys.create(
             new_journey_title, user_id
         )
 
@@ -71,7 +71,7 @@ def edit_entry(entry_id):
         flash("Unauthorized access", "Error")
         return redirect("/")
 
-    current_learning_journey = journeys.get_learning_journey_by_id(
+    current_learning_journey = journeys.get_one(
         entry.learning_journey_id
     )
     entry_tags = " ".join(tags.get(entry_id))
@@ -88,26 +88,21 @@ def edit_entry(entry_id):
         )
         new_breakthrough = "new_breakthrough" in request.form
 
-        if new_learning_journey_id == "":
-            new_learning_journey_id = None
-
-        if new_journey_title:
-            new_learning_journey_id = journeys.create_learning_journey(
-                new_journey_title, user_id
-            )
-
-        entries.update_entry_content(entry_id, new_content)
-        entries.update_entry_learning_journey(entry_id, new_learning_journey_id)
-        tags.update(user_id, new_tags, entry_id)
-        breakthroughs.process(user_id, entry_id, new_breakthrough)
-
-        # if not entries.process_update(user_id, entry_id, new_content, new_journey_title, new_learning_journey_id, new_tags, new_breakthrough):
-        #    flash("Something went wrong", "Error")
-        #    return redirect("/")
+        if not entries.process_update(
+            user_id,
+            entry_id,
+            new_content,
+            new_journey_title,
+            new_learning_journey_id,
+            new_tags,
+            new_breakthrough
+        ):
+            flash("Something went wrong", "Error")
+            return redirect("/")
         flash("Entry updated!", "Success")
         return redirect("/")
 
-    learning_journeys = journeys.get_learning_journeys(user_id)
+    learning_journeys = journeys.get_all(user_id)
     return render_template(
         "edit_entry.html",
         entry=entry,

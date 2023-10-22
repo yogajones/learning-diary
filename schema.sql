@@ -5,7 +5,7 @@ CREATE TABLE users (
 );
 CREATE TABLE learning_journeys (
     id SERIAL PRIMARY KEY,
-    title TEXT,
+    title TEXT UNIQUE NOT NULL,
     user_id INTEGER REFERENCES users ON DELETE CASCADE
 );
 CREATE TABLE entries (

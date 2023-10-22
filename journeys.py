@@ -27,14 +27,18 @@ def get_one(learning_journey_id):
 
 
 def rename(user_id, journey_title, new_journey_title):
-    sql = """UPDATE learning_journeys SET title = :new_title
-             WHERE user_id = :user_id AND title = :old_title"""
-    db.session.execute(
-        text(sql),
-        {
-            "new_title": new_journey_title,
-            "user_id": user_id,
-            "old_title": journey_title,
-        },
-    )
-    db.session.commit()
+    try:
+        sql = """UPDATE learning_journeys SET title = :new_title
+                WHERE user_id = :user_id AND title = :old_title"""
+        db.session.execute(
+            text(sql),
+            {
+                "new_title": new_journey_title,
+                "user_id": user_id,
+                "old_title": journey_title,
+            },
+        )
+        db.session.commit()
+        return True
+    except:
+        return False

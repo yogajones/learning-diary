@@ -72,8 +72,10 @@ def edit_journey(journey_title):
         if session["csrf_token"] != request.form["csrf_token"]:
             abort(403)
         new_journey_title = request.form.get("new_journey_title")
-        journeys.rename(user_id, journey_title, new_journey_title)
-        flash("Journey renamed!", "Success")
+        if journeys.rename(user_id, journey_title, new_journey_title):
+            flash("Journey renamed!", "Success")
+            return redirect("/")
+        flash("Something went wrong. Perhaps you already have a journey with that name?", "Error")
         return redirect("/")
     return render_template('edit_journey.html', journey_title=journey_title)
 

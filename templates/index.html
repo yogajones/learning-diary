@@ -18,6 +18,9 @@
         <div class="form-group">
             <button type="submit" class="btn btn-primary">Filter</button>
         </div>
+        {% if request.form.get("selected_journey") %}
+            <a class="btn btn-secondary" href="/edit_journey/{{ request.form.get("selected_journey") }}">Edit journey</a>
+        {% endif %}
         <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
     </form>
 

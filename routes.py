@@ -64,6 +64,20 @@ def send():
     return redirect("/send")
 
 
+@app.route('/edit_journey/<journey_title>', methods=['GET', 'POST'])
+def edit_journey(journey_title):
+    user_id = users.get_user_id()
+
+    if request.method == 'POST':
+        if session["csrf_token"] != request.form["csrf_token"]:
+            abort(403)
+        new_journey_title = request.form.get("new_journey_title")
+        journeys.rename(user_id, journey_title, new_journey_title)
+        flash("Journey renamed!", "Success")
+        return redirect("/")
+    return render_template('edit_journey.html', journey_title=journey_title)
+
+
 @app.route("/edit_entry/<int:entry_id>", methods=["GET", "POST"])
 def edit_entry(entry_id):
 

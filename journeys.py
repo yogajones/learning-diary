@@ -18,7 +18,23 @@ def get_all(user_id):
 
 
 def get_one(learning_journey_id):
-    sql = "SELECT id, title, user_id FROM learning_journeys WHERE id=:learning_journey_id"
+    sql = (
+        "SELECT id, title, user_id FROM learning_journeys WHERE id=:learning_journey_id"
+    )
     result = db.session.execute(text(sql), {"learning_journey_id": learning_journey_id})
     learning_journey = result.fetchone()
     return learning_journey
+
+
+def rename(user_id, journey_title, new_journey_title):
+    sql = """UPDATE learning_journeys SET title = :new_title
+             WHERE user_id = :user_id AND title = :old_title"""
+    db.session.execute(
+        text(sql),
+        {
+            "new_title": new_journey_title,
+            "user_id": user_id,
+            "old_title": journey_title,
+        },
+    )
+    db.session.commit()

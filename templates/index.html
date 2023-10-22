@@ -1,23 +1,43 @@
 {% extends "user_base.html" %}
 {% block user_content %}
 <div class="container mt-5">
-    <h2>Welcome!</h2>
+    <div class="alert alert-info" role="alert">
+        <h3>Welcome to Your Lifelong Learning Diary!</h3>
+        <p>
+            This is your personal space for recording your personal lifelong learning journeys.
+        </p>
+        <h4>What are Learning Journeys and Breakthroughs?</h4>
+        <p>
+            Learning journeys are your unique paths of growth and discovery. Each learning journey can represent a
+            course, a project, or any educational experience that's meaningful to you. A "Breakthrough" is a special tag
+            you can use to highlight pivotal moments in your learning journey. It signifies significant insights and
+            achievements.
+        </p>
+        <h4>Renaming or Deleting a Learning Journey</h4>
+        <p>
+            To rename or delete a learning journey, first choose it from the filter dropdown above. Then, click the
+            "Rename journey" or "Delete journey" button accordingly.
+        </p>
+    </div>    
     <form method="post">
         <div class="form-group mt-4">
             <label for="selected_journey">Filter by Learning Journey:</label>
-            <select class="form-control mt-2" name="selected_journey" id="selected_journey" onchange="this.form.submit()">
+            <select class="form-control mt-2" name="selected_journey" id="selected_journey"
+                onchange="this.form.submit()">
                 <option value="">All</option>
                 {% for journey in learning_journeys %}
-                    <option value="{{ journey.title }}"
-                        {% if request.form.get("selected_journey") == journey.title %} selected {% endif %}>
-                        {{ journey.title }}
-                    </option>
+                <option value="{{ journey.title }}" {% if request.form.get("selected_journey")==journey.title %}
+                    selected {% endif %}>
+                    {{ journey.title }}
+                </option>
                 {% endfor %}
-            </select>            
+            </select>
         </div>
         {% if request.form.get("selected_journey") %}
-            <a class="btn btn-warning btn-sm mt-2" href="/edit_journey/{{ request.form.get("selected_journey") }}">Rename journey</a>
-            <a class="btn btn-danger btn-sm mt-2" href="/delete_journey/{{ request.form.get("selected_journey") }}">Delete journey</a>
+        <a class="btn btn-warning btn-sm mt-2" href="/edit_journey/{{ request.form.get(" selected_journey") }}">Rename
+            journey</a>
+        <a class="btn btn-danger btn-sm mt-2" href="/delete_journey/{{ request.form.get(" selected_journey") }}">Delete
+            journey</a>
         {% endif %}
         <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
     </form>

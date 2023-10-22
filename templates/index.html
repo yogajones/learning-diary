@@ -1,11 +1,11 @@
 {% extends "user_base.html" %}
 {% block user_content %}
 <div class="container mt-5">
-    <h1>Welcome!</h1>
+    <h2>Welcome!</h2>
     <form method="post">
         <div class="form-group mt-4">
             <label for="selected_journey">Filter by Learning Journey:</label>
-            <select class="form-control" name="selected_journey" id="selected_journey" onchange="this.form.submit()">
+            <select class="form-control mt-2" name="selected_journey" id="selected_journey" onchange="this.form.submit()">
                 <option value="">All</option>
                 {% for journey in learning_journeys %}
                     <option value="{{ journey.title }}"
@@ -22,7 +22,7 @@
         <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
     </form>
 
-    <a class="btn btn-primary mt-2" href="/new">New entry</a>
+    <a class="btn btn-primary mt-4" href="/new">New entry</a>
     <hr>
     {% for entry in entries %}
     <div class="entry-card mt-3">

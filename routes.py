@@ -56,6 +56,8 @@ def send():
         learning_journey_id = journeys.create(
             new_journey_title, user_id
         )
+    if learning_journey_id == "":
+        learning_journey_id = None
 
     if entries.send(content, user_id, learning_journey_id, tags_input, breakthrough):
         flash("Entry created!", "Success")

@@ -16,8 +16,8 @@
             </select>            
         </div>
         {% if request.form.get("selected_journey") %}
-            <a class="btn btn-secondary" href="/edit_journey/{{ request.form.get("selected_journey") }}">Edit journey</a>
-            <a class="btn btn-danger" href="/delete_journey/{{ request.form.get("selected_journey") }}">Delete journey</a>
+            <a class="btn btn-warning btn-sm mt-2" href="/edit_journey/{{ request.form.get("selected_journey") }}">Rename journey</a>
+            <a class="btn btn-danger btn-sm mt-2" href="/delete_journey/{{ request.form.get("selected_journey") }}">Delete journey</a>
         {% endif %}
         <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
     </form>

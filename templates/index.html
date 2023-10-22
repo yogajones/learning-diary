@@ -5,18 +5,15 @@
     <form method="post">
         <div class="form-group mt-4">
             <label for="selected_journey">Filter by Learning Journey:</label>
-            <select class="form-control" name="selected_journey" id="selected_journey">
+            <select class="form-control" name="selected_journey" id="selected_journey" onchange="this.form.submit()">
                 <option value="">All</option>
                 {% for journey in learning_journeys %}
                     <option value="{{ journey.title }}"
-                            {% if request.form.get("selected_journey") == journey.title %} selected {% endif %}>
+                        {% if request.form.get("selected_journey") == journey.title %} selected {% endif %}>
                         {{ journey.title }}
                     </option>
                 {% endfor %}
-            </select>
-        </div>
-        <div class="form-group">
-            <button type="submit" class="btn btn-primary">Filter</button>
+            </select>            
         </div>
         {% if request.form.get("selected_journey") %}
             <a class="btn btn-secondary" href="/edit_journey/{{ request.form.get("selected_journey") }}">Edit journey</a>

@@ -2,7 +2,26 @@
 {% block user_content %}
 <div class="container mt-5">
     <h1>Welcome!</h1>
-    <a class="btn btn-primary" href="/new">New entry</a>
+    <form method="post">
+        <div class="form-group mt-4">
+            <label for="selected_journey">Filter by Learning Journey:</label>
+            <select class="form-control" name="selected_journey" id="selected_journey">
+                <option value="">All</option>
+                {% for journey in learning_journeys %}
+                    <option value="{{ journey.title }}"
+                            {% if request.form.get("selected_journey") == journey.title %} selected {% endif %}>
+                        {{ journey.title }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Filter</button>
+        </div>
+        <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+    </form>
+
+    <a class="btn btn-primary mt-2" href="/new">New entry</a>
     <hr>
     {% for entry in entries %}
     <div class="entry-card mt-3">

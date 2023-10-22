@@ -17,15 +17,20 @@ def check_authentication():
             return redirect("/login")
 
 
-@app.route("/")
+@app.route("/", methods=['GET', 'POST'])
 def index():
     user_id = users.get_user_id()
-    if user_id == 0:
-        return redirect("/login")
+    learning_journeys = journeys.get_all(user_id)
+    entry_list = entries.get_all(user_id)
 
-    entry_list = entries.get_list(user_id)
-    return render_template("index.html", count=len(entry_list), entries=entry_list)
+    if request.method == 'POST':
+        if session["csrf_token"] != request.form["csrf_token"]:
+            abort(403)
+        selected_journey_title = request.form.get("selected_journey")
+        if selected_journey_title:
+            entry_list = entries.get_all_by_learning_journey(user_id, selected_journey_title)
 
+    return render_template('index.html', count=len(entry_list),entries=entry_list, learning_journeys=learning_journeys)
 
 @app.route("/new")
 def new():
@@ -61,8 +66,14 @@ def send():
 
 @app.route("/edit_entry/<int:entry_id>", methods=["GET", "POST"])
 def edit_entry(entry_id):
+
+    ### move this to entries.py and return an Entry object
     user_id = users.get_user_id()
-    entry = entries.get_entry_by_id(entry_id)
+    entry = entries.get_one(entry_id)
+    current_learning_journey = journeys.get_one(entry.learning_journey_id)
+    entry_tags = " ".join(tags.get(entry_id))
+    entry_breakthrough = breakthroughs.exists(user_id, entry_id)
+    learning_journeys = journeys.get_all(user_id)
 
     if not entry:
         flash("Entry not found", "Error")
@@ -70,12 +81,7 @@ def edit_entry(entry_id):
     if entry.user_id != user_id:
         flash("Unauthorized access", "Error")
         return redirect("/")
-
-    current_learning_journey = journeys.get_one(
-        entry.learning_journey_id
-    )
-    entry_tags = " ".join(tags.get(entry_id))
-    entry_breakthrough = breakthroughs.exists(user_id, entry_id)
+    ###
 
     if request.method == "POST":
         if session["csrf_token"] != request.form["csrf_token"]:
@@ -102,7 +108,6 @@ def edit_entry(entry_id):
         flash("Entry updated!", "Success")
         return redirect("/")
 
-    learning_journeys = journeys.get_all(user_id)
     return render_template(
         "edit_entry.html",
         entry=entry,
@@ -118,7 +123,7 @@ def edit_entry(entry_id):
 @app.route("/delete_entry/<int:entry_id>")
 def delete_entry(entry_id):
     user_id = users.get_user_id()
-    entry = entries.get_entry_by_id(entry_id)
+    entry = entries.get_one(entry_id)
 
     if not entry:
         flash("Entry not found", "Error")
@@ -145,7 +150,7 @@ def confirm_delete(entry_id):
         abort(403)
 
     user_id = users.get_user_id()
-    entry = entries.get_entry_by_id(entry_id)
+    entry = entries.get_one(entry_id)
 
     if not entry:
         flash("Entry not found", "Error")
@@ -201,7 +206,7 @@ def register():
 def profile():
     user_id = users.get_user_id()
     username = users.get_username(user_id)
-    entry_list = entries.get_list(user_id)
+    entry_list = entries.get_all(user_id)
 
     return render_template(
         "profile.html", username=username, entry_count=len(entry_list)

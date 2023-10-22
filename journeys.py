@@ -26,6 +26,15 @@ def get_one(learning_journey_id):
     return learning_journey
 
 
+def get_one_by_title(user_id, learning_journey_title):
+    sql = "SELECT id, title, user_id FROM learning_journeys WHERE title=:title AND user_id=:user_id"
+    result = db.session.execute(
+        text(sql), {"title": learning_journey_title, "user_id": user_id}
+    )
+    learning_journey = result.fetchone()
+    return learning_journey
+
+
 def rename(user_id, journey_title, new_journey_title):
     try:
         sql = """UPDATE learning_journeys SET title = :new_title
@@ -40,5 +49,29 @@ def rename(user_id, journey_title, new_journey_title):
         )
         db.session.commit()
         return True
-    except:
+    except Exception as e:
+        print(e)
+        return False
+
+
+def delete(user_id, learning_journey_title):
+    try:
+        sql = (
+            """UPDATE entries SET learning_journey_id=NULL
+            WHERE learning_journey_id=(SELECT id FROM learning_journeys
+            WHERE title=:title AND user_id=:user_id)"""
+        )
+        db.session.execute(
+            text(sql), {"title": learning_journey_title, "user_id": user_id}
+        )
+
+        sql = "DELETE FROM learning_journeys WHERE title=:title AND user_id=:user_id"
+        db.session.execute(
+            text(sql), {"title": learning_journey_title, "user_id": user_id}
+        )
+        db.session.commit()
+
+        return True
+    except Exception as e:
+        print(e)
         return False

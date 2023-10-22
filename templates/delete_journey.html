@@ -1,0 +1,19 @@
+{% extends "user_base.html" %}
+{% block user_content %}
+<div class="container mt-5">
+    <h3>Delete {{ learning_journey.title }}</h3>
+    <br>
+    <p>Do you want to delete this learning journey? This will not delete the entries.</p>
+    <form method="post" action="/confirm_delete_journey/{{ learning_journey.title }}">
+        <button class="btn btn-danger" type="submit">Yes</button>
+        <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+    </form>
+    <br>
+    <h5>Associated entries:</h5>
+    <ul>
+        {% for entry in entries %}
+            <li>{{ entry.content }}</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

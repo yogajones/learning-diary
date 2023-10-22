@@ -82,6 +82,26 @@ def edit_journey(journey_title):
     return render_template('edit_journey.html', journey_title=journey_title)
 
 
+@app.route("/delete_journey/<journey_title>")
+def delete_journey(journey_title):
+    user_id = users.get_user_id()
+    learning_journey = journeys.get_one_by_title(user_id, journey_title)
+    associated_entries = entries.get_all_by_learning_journey(user_id, journey_title)
+    return render_template('delete_journey.html', learning_journey=learning_journey, entries=associated_entries)
+
+
+@app.route("/confirm_delete_journey/<journey_title>", methods=['POST'])
+def confirm_delete_journey(journey_title):
+    user_id = users.get_user_id()
+    if session["csrf_token"] != request.form["csrf_token"]:
+        abort(403)
+    if journeys.delete(user_id, journey_title):
+        flash("Learning journey deleted", "Success")
+        return redirect("/")
+    flash("Failed to delete learning journey", "Error")
+    return redirect("/")
+
+
 @app.route("/edit_entry/<int:entry_id>", methods=["GET", "POST"])
 def edit_entry(entry_id):
 

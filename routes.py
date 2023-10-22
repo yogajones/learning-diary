@@ -240,15 +240,11 @@ def register():
             return redirect("/")
 
 
-@app.route("/profile")
-def profile():
+@app.route("/settings")
+def settings():
     user_id = users.get_user_id()
     username = users.get_username(user_id)
-    entry_list = entries.get_all(user_id)
-
-    return render_template(
-        "profile.html", username=username, entry_count=len(entry_list)
-    )
+    return render_template("settings.html", username=username)
 
 
 @app.route("/delete_account")
